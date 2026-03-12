@@ -13,7 +13,7 @@ connectDB();
 // parsing middleware
 app.use(express.json());
 
-app.use('/notes', noteRoutes);
+app.use('/api/notes', noteRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server started on PORT:${PORT}`);
