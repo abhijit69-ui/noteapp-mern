@@ -6,7 +6,6 @@ import NoteDetailPage from './pages/NoteDetailPage';
 export default function App() {
   return (
     <div data-theme='valentine'>
-      <button className='btn btn-outline'>click Me</button>
       <Routes>
         <Route index element={<HomePage />} />
         <Route path='/create' element={<CreatePage />} />
