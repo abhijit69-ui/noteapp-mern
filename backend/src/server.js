@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import noteRoutes from './routes/notesRoutes.js';
 import { connectDB } from './config/db.js';
 import rateLimiter from './middleware/rateLimiter.js';
@@ -13,6 +14,8 @@ app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 5001;
 
+// cors middleware
+app.use(cors());
 // parsing middleware
 app.use(express.json());
 // custom middleware
