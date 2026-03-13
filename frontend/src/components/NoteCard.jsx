@@ -37,7 +37,7 @@ export default function NoteCard({ note, setNotes }) {
               <PenSquareIcon className='size-4' />
               <button
                 onClick={(e) => handleDelete(e, note._id)}
-                className='btn btn-ghost btn-xs text-error'
+                className='btn btn-ghost btn-xs text-pretty'
               >
                 <Trash2Icon className='size-4' />
               </button>
