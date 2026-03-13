@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import noteRoutes from './routes/notesRoutes.js';
@@ -13,15 +14,26 @@ const app = express();
 app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
 
 // cors middleware
-app.use(cors());
+if (process.env.NODE_ENV !== 'production') {
+  app.use(cors());
+}
 // parsing middleware
 app.use(express.json());
 // custom middleware
-app.use(rateLimiter);
+app.use('/api', rateLimiter);
 
 app.use('/api/notes', noteRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+  });
+}
 
 connectDB().then(() => {
   app.listen(PORT, () => {
