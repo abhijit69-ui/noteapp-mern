@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/User';
-import { generateToken } from '../utils/generateToken';
+import User from '../models/User.js';
+import { generateToken } from '../utils/generateToken.js';
 
 export const register = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ export const register = async (req, res) => {
     });
 
     // 4️⃣ Generate JWT
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, res);
 
     // 5️⃣ Send response
     res.status(201).json({
@@ -42,4 +42,48 @@ export const register = async (req, res) => {
     console.error('Error in register controller:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    // verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id, res);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        id: user._id,
+        email: user.email,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const logout = async (_, res) => {
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out successfully',
+  });
 };

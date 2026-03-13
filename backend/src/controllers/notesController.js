@@ -2,7 +2,9 @@ import Note from '../models/Note.js';
 
 export const getAllNotes = async (_, res) => {
   try {
-    const notes = await Note.find().sort({ createdAt: -1 }); // newest first
+    const notes = await Note.find({ user: req.user._id }).sort({
+      createdAt: -1,
+    }); // newest first
     res.status(200).json(notes);
   } catch (error) {
     console.error('Error in getAllNotes controller', error);
@@ -12,7 +14,10 @@ export const getAllNotes = async (_, res) => {
 
 export const getNoteById = async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
     if (!note) return res.status(404).json({ message: 'Note not found!' });
     res.status(200).json(note);
   } catch (error) {
@@ -24,7 +29,7 @@ export const getNoteById = async (req, res) => {
 export const createNote = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const note = new Note({ title, content });
+    const note = new Note({ title, content, user: req.user._id });
 
     const savedNote = await note.save();
     res.status(201).json(savedNote);
@@ -37,8 +42,11 @@ export const createNote = async (req, res) => {
 export const updateNote = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const updatedNote = await Note.findByIdAndUpdate(
-      req.params.id,
+    const updatedNote = await Note.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        user: req.user._id,
+      },
       { title, content },
       { new: true },
     );
@@ -55,7 +63,10 @@ export const updateNote = async (req, res) => {
 
 export const deleteNote = async (req, res) => {
   try {
-    const deletedNote = await Note.findByIdAndDelete(req.params.id);
+    const deletedNote = await Note.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id,
+    });
     if (!deletedNote)
       return res.status(404).json({ message: 'Note not found' });
     res.status(200).json({ message: 'Note deleted!' });

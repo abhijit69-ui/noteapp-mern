@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/authRoutes.js';
 import noteRoutes from './routes/notesRoutes.js';
 import { connectDB } from './config/db.js';
 import rateLimiter from './middleware/rateLimiter.js';
@@ -22,9 +24,11 @@ if (process.env.NODE_ENV !== 'production') {
 }
 // parsing middleware
 app.use(express.json());
+app.use(cookieParser());
 // custom middleware
 app.use('/api', rateLimiter);
 
+app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 
 if (process.env.NODE_ENV === 'production') {

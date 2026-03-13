@@ -6,13 +6,14 @@ import {
   getNoteById,
   updateNote,
 } from '../controllers/notesController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', getAllNotes);
-router.get('/:id', getNoteById);
-router.post('/', createNote);
-router.put('/:id', updateNote);
-router.delete('/:id', deleteNote);
+router.get('/', protect, getAllNotes);
+router.get('/:id', protect, getNoteById);
+router.post('/', protect, createNote);
+router.put('/:id', protect, updateNote);
+router.delete('/:id', protect, deleteNote);
 
 export default router;
