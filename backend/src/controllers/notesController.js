@@ -1,6 +1,6 @@
 import Note from '../models/Note.js';
 
-export const getAllNotes = async (_, res) => {
+export const getAllNotes = async (req, res) => {
   try {
     const notes = await Note.find({ user: req.user._id }).sort({
       createdAt: -1,

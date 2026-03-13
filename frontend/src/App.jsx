@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router';
 import HomePage from './pages/HomePage';
 import CreatePage from './pages/CreatePage';
 import NoteDetailPage from './pages/NoteDetailPage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 export default function App() {
   return (
@@ -15,6 +17,8 @@ export default function App() {
     >
       <Routes>
         <Route index element={<HomePage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/login' element={<LoginPage />} />
         <Route path='/create' element={<CreatePage />} />
         <Route path='/note/:id' element={<NoteDetailPage />} />
       </Routes>
