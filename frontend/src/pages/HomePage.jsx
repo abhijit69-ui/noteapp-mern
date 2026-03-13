@@ -14,7 +14,6 @@ export default function HomePage() {
     const fetchNotes = async () => {
       try {
         const res = await api.get('/notes');
-        console.log(res.data);
         setNotes(res.data);
         setIsRateLimited(false);
       } catch (error) {
@@ -45,7 +44,7 @@ export default function HomePage() {
         {notes.length > 0 && !isRateLimited && (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {notes.map((note) => (
-              <NoteCard key={note._id} note={note} />
+              <NoteCard key={note._id} note={note} setNotes={setNotes} />
             ))}
           </div>
         )}
